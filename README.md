@@ -20,7 +20,7 @@ It returns the following:
 
 ```json
 {
-  id_token: {jwt}
+  "id_token": {jwt}
 }
 ```
 
@@ -39,7 +39,7 @@ It returns the following:
 
 ```json
 {
-  id_token: {jwt}
+  "id_token": {jwt}
 }
 ```
 
