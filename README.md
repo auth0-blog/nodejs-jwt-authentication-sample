@@ -61,6 +61,8 @@ The JWT must be sent on the `Authorization` header as follows: `Authorization: B
 
 Just clone the repository, run `npm install` and then `node server.js`. That's it :).
 
+If you want to run it on another port, just run `PORT=3001 node server.js` to run it on port 3001 for example
+
 ## Issue Reporting
 
 If you have found a bug or if you have a feature request, please report them at this repository issues section. Please do not report security vulnerabilities on the public GitHub issue tracker. The [Responsible Disclosure Program](https://auth0.com/whitehat) details the procedure for disclosing security issues.
