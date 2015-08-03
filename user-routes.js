@@ -20,32 +20,37 @@ function getUserScheme(req) {
   
   var username;
   var type;
+  var userSearch = {};
 
   // The POST contains a username and not an email
   if(req.body.username) {
     username = req.body.username;
     type = 'username';
+    userSearch = { username: username };
   }
   // The POST contains an email and not an username
   else if(req.body.email) {
     username = req.body.email;
     type = 'email';
+    userSearch = { email: username };
   }
 
   return {
     username: username,
-    type: type
+    type: type,
+    userSearch: userSearch
   }
 }
 
 app.post('/users', function(req, res) {
   
-  userScheme = getUserScheme(req);  
+  var userScheme = getUserScheme(req);  
 
-  if (!req.body.username && !req.body.email || !req.body.password) {
+  if (!userScheme.username || !req.body.password) {
     return res.status(400).send("You must send the username and the password");
   }
-  if (_.find(users, {username: userScheme.username}) || _.find(users, {email: userScheme.username})) {
+
+  if (_.find(users, userScheme.userSearch)) {
    return res.status(400).send("A user with that username already exists");
   }
 
@@ -61,13 +66,14 @@ app.post('/users', function(req, res) {
 
 app.post('/sessions/create', function(req, res) {
 
-  userScheme = getUserScheme(req);
+  var userScheme = getUserScheme(req);
 
-  if (!req.body.username && !req.body.email || !req.body.password) {
+  if (!userScheme.username || !req.body.password) {
     return res.status(400).send("You must send the username and the password");
   }
 
-  var user = _.find(users, {username: userScheme.username}) || _.find(users, {email: userScheme.username});
+  var user = _.find(users, userScheme.userSearch);
+  
   if (!user) {
     return res.status(401).send({message:"The username or password don't match", user: user});
   }
