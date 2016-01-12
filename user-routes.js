@@ -13,11 +13,11 @@ var users = [{
 }];
 
 function createToken(user) {
-  return jwt.sign(_.omit(user, 'password'), config.secret, { expiresInMinutes: 60*5 });
+  return jwt.sign(_.omit(user, 'password'), config.secret, { expiresIn: 60 * 60 * 5 });
 }
 
 function getUserScheme(req) {
-  
+
   var username;
   var type;
   var userSearch = {};
@@ -43,8 +43,8 @@ function getUserScheme(req) {
 }
 
 app.post('/users', function(req, res) {
-  
-  var userScheme = getUserScheme(req);  
+
+  var userScheme = getUserScheme(req);
 
   if (!userScheme.username || !req.body.password) {
     return res.status(400).send("You must send the username and the password");
@@ -73,7 +73,7 @@ app.post('/sessions/create', function(req, res) {
   }
 
   var user = _.find(users, userScheme.userSearch);
-  
+
   if (!user) {
     return res.status(401).send({message:"The username or password don't match", user: user});
   }
