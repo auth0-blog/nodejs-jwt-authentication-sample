@@ -20,6 +20,12 @@ apiProxy.on('proxyReq', function(proxyReq, req, res, options) {
   proxyReq.setHeader('Authorization', 'Bearer ' + kubernetes.token);
 });
 
+apiProxy.on('error', function(err, preq, pres) {
+  pres.writeHead(500, { 'Content-Type': 'text/plain' });
+  pres.write('An error occured at server. Please contact your administrator.');
+  pres.end();
+});
+
 app.use('/api', jwtCheck);
 
 app.all('/api/*', function(req, res, next) {
