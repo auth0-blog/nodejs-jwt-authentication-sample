@@ -1,9 +1,9 @@
-var express = require('express'),
-    jwt     = require('express-jwt'),
-    request = require('request'),
-     _      = require('lodash'),
-    config  = require('./config'),
-    quoter  = require('./quoter');
+var express   = require('express'),
+    jwt       = require('express-jwt'),
+    httpProxy = require('http-proxy'),
+    apiProxy  = httpProxy.createProxyServer(),
+    config    = require('./config'),
+    quoter    = require('./quoter');
 
 var app = module.exports = express.Router();
 
@@ -16,51 +16,19 @@ var kubernetes = {
   token: process.env.KUBERNETES_API_TOKEN
 };
 
-var defaults = {
-  url: kubernetes.url,
-  rejectUnauthorized: false,
-  method: 'GET',
-  headers: {
-    'Authorization': 'Bearer ' + kubernetes.token
-  }
-};
-
-var actionHandler = function(req, res, next) {
-  if (!['POST', 'PUT', 'DELETE'].indexOf(req.method)) {
-    return next();
-  }
-
-  var path = req.path.replace('k8s', '');
-  var options = _.cloneDeep(defaults);
-  options.url = kubernetes.url + path;
-  options.method = req.method;
-
-  // TODO: add params sending
-  function callback(error, response, body) {
-    res.status(response.statusCode).send(body);
-  }
-
-  request(options, callback);
-};
-
-app.use('/k8s', jwtCheck);
-
-app.get('/k8s/*', function(req, res) {
-  var path = req.path.replace('k8s', '');
-  var options = _.cloneDeep(defaults);
-  options.url = kubernetes.url + path;
-
-  function callback(error, response, body) {
-    /* formatted JSON */
-    // var info = JSON.parse(body);
-    // res.setHeader('Content-Type', 'application/json');
-    // res.status(response.statusCode).send(JSON.stringify(info, 0, 4));
-    res.status(response.statusCode).send(body);
-  }
-
-  request(options, callback);
+apiProxy.on('proxyReq', function(proxyReq, req, res, options) {
+  proxyReq.setHeader('Authorization', 'Bearer ' + kubernetes.token);
 });
 
-app.post('/k8s/*', actionHandler);
-app.put('/k8s/*', actionHandler);
-app.delete('/k8s/*', actionHandler);
+app.use('/api', jwtCheck);
+
+app.all('/api/*', function(req, res, next) {
+  console.log('redirecting to kubernetes API: [' + req.method + '] '+ req.path);
+
+  var options = {
+    target: kubernetes.url,
+    secure: false
+  }
+
+  apiProxy.web(req, res, options);
+});

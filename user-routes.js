@@ -1,9 +1,12 @@
 var express = require('express'),
     _       = require('lodash'),
     config  = require('./config'),
-    jwt     = require('jsonwebtoken');
+    jwt     = require('jsonwebtoken'),
+    bodyParser = require('body-parser');
 
 var app = module.exports = express.Router();
+var jsonParser = bodyParser.json();
+var urlencodedParser = bodyParser.urlencoded({ extended: false });
 
 // XXX: This should be a database of users :).
 var users = [{
@@ -42,7 +45,7 @@ function getUserScheme(req) {
   }
 }
 
-app.post('/users', function(req, res) {
+app.post('/users', jsonParser, urlencodedParser, function(req, res) {
 
   var userScheme = getUserScheme(req);
 
@@ -64,7 +67,7 @@ app.post('/users', function(req, res) {
   });
 });
 
-app.post('/sessions/create', function(req, res) {
+app.post('/sessions/create', jsonParser, urlencodedParser, function(req, res) {
 
   var userScheme = getUserScheme(req);
 

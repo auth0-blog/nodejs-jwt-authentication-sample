@@ -34,6 +34,6 @@
     "jsonwebtoken": "^5.0.1",
     "lodash": "^2.4.1",
     "morgan": "^1.2.3",
-    "request": "^2.67.0"
+    "http-proxy": "1.12.0"
   }
 }

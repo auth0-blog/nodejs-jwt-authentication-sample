@@ -4,19 +4,12 @@ var logger          = require('morgan'),
     express         = require('express'),
     errorhandler    = require('errorhandler'),
     cors            = require('cors'),
-    dotenv          = require('dotenv'),
-    bodyParser      = require('body-parser');
+    dotenv          = require('dotenv');
 
 var app = express();
 
 dotenv.load();
 
-// Parsers
-// old version of line
-// app.use(bodyParser.urlencoded());
-// new version of line
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
 app.use(cors());
 
 app.use(function(err, req, res, next) {
