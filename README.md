@@ -2,6 +2,14 @@
 
 This is a NodeJS API that supports username and password authentication with JWTs and has APIs that return Chuck Norris phrases. How awesome is that?
 
+## Running the server
+
+1. Provide information for the following environment variables:
+  - `KUBERNETES_API_URL` : full path of the Kubernetes API
+  - `KUBERNETES_API_TOKEN_FILE` : location of the file where the Kubernetes API token is stored
+2. For local development, the `k8s.token` file can be used to store the API token.
+3. Run the server with: `node server.js` or explicitly set the environment variables like so: `KUBERNETES_API_URL='https://myk8s.com' KUBERNETES_API_TOKEN_FILE='k8s.token' node server.js`
+
 ## Available APIs
 
 ### User APIs
