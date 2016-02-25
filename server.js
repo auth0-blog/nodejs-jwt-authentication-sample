@@ -3,7 +3,6 @@ var logger          = require('morgan'),
     http            = require('http'),
     express         = require('express'),
     errorhandler    = require('errorhandler'),
-    cors            = require('cors'),
     dotenv          = require('dotenv'),
     bodyParser      = require('body-parser');
 
