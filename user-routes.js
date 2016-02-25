@@ -75,7 +75,7 @@ app.post('/sessions/create', function(req, res) {
   var user = _.find(users, userScheme.userSearch);
   
   if (!user) {
-    return res.status(401).send({message:"The username or password don't match", user: user});
+    return res.status(401).send("The username or password don't match");
   }
 
   if (user.password !== req.body.password) {
