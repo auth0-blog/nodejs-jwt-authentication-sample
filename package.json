@@ -8,12 +8,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/auth0/in-memory-todo.git"
+    "url": "https://github.com/auth0/nodejs-jwt-authentication-sample.git"
   },
   "keywords": [
-    "todo",
-    "in",
-    "memory",
     "jwt",
     "auth0"
   ],
