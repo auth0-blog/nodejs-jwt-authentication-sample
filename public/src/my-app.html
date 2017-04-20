@@ -23,7 +23,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="my-icons.html">
 <link rel="import" href="../bower_components/iron-localstorage/iron-localstorage.html">
 <link rel="import" href="app-data.html">
-<link rel="import" href="log-out.html">
+<link rel="import" href="auth0-login.html">
 
 <dom-module id="my-app">
   <template>
@@ -88,11 +88,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <app-toolbar>
             <paper-icon-button icon="my-icons:menu" drawer-toggle></paper-icon-button>
             <div main-title>Chuck Norris</div>
-            <a href="/register-login" name="register-login" hidden$="[[storedUser.loggedin]]">Log In</a>
-            <div hidden$="[[!storedUser.loggedin]]">
-              <span class="greeting">Hi [[storedUser.name]]!</span>
-              <log-out stored-user="storedUser" link></log-out>
-            </div>
+             <auth0-login 
+        client-id="fSou_UdOHkyzxmNTorNd8nM6i78a86rK" 
+        domain="gserb.eu.auth0.com" 
+        redirect-url="http://localhost:8080"></auth0-login>
+
           </app-toolbar>
         </app-header>
 
