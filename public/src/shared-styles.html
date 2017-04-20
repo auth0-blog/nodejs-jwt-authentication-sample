@@ -40,6 +40,50 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         color: #212121;
         font-size: 22px;
       }
+
+       :root {
+        --primary-color: #4285f4;
+      }
+
+      a,
+      paper-button {
+        font-weight: bold;
+      }
+
+      a {
+        color: var(--primary-color);
+      }
+
+      paper-button {
+        color: #fff;
+      }
+
+      paper-button.primary {
+        background: var(--primary-color);
+      }
+
+      blockquote {
+        border-left: 4px solid #eee;
+        margin-left: 4px;
+        padding-left: 20px;
+      }
+
+      .wrapper-btns {
+        margin-top: 15px;
+      }
+
+      paper-button.link {
+        color: #757575;
+      }
+
+      .alert-error {
+        background: #ffcdd2;
+        border: 1px solid #f44336;
+        border-radius: 3px;
+        color: #333;
+        font-size: 14px;
+        padding: 10px;
+      }
     </style>
   </template>
 </dom-module>
