@@ -13,7 +13,7 @@ var jwtCheck = jwt({
 });
 
 // Check for scope
-function require_scope(scope) {
+function requireScope(scope) {
   return function (req, res, next) {
     var has_scopes = req.user.scope === scope;
     if (!has_scopes) { res.send(401); }
@@ -21,7 +21,7 @@ function require_scope(scope) {
   };
 }
 
-app.use('/api/protected', jwtCheck, require_scope('full_access'));
+app.use('/api/protected', jwtCheck, requireScope('full_access'));
 
 app.get('/api/protected/random-quote', function(req, res) {
   res.status(200).send(quoter.getRandomOne());
