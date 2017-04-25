@@ -20,11 +20,12 @@ It returns the following:
 
 ```json
 {
-  "id_token": {jwt}
+  "id_token": {jwt},
+  "access_token": {jwt}
 }
 ```
 
-The JWT is signed with the secret located at the `config.json` file. That JWT will contain the `username` and the `extra` information sent.
+The `id_token` and `access_token` are signed with the secret located at the `config.json` file. The `id_token` will contain the `username` and the `extra` information sent, while the `access_token` will contain the `audience`, `jti`, `issuer` and `scope`.
 
 #### POST `/sessions/create`
 
@@ -39,11 +40,12 @@ It returns the following:
 
 ```json
 {
-  "id_token": {jwt}
+  "id_token": {jwt},
+  "access_token": {jwt}
 }
 ```
 
-The JWT is signed with the secret located at the `config.json` file. That JWT will contain the `username` and the `extra` information that you sent at signup time.
+The `id_token` and `access_token` are signed with the secret located at the `config.json` file. The `id_token` will contain the `username` and the `extra` information sent, while the `access_token` will contain the `audience`, `jti`, `issuer` and `scope`.
 
 ### Quotes API
 
@@ -55,7 +57,7 @@ It returns a String with a Random quote from Chuck Norris. It doesn't require au
 
 It returns a String with a Random quote from Chuck Norris. It requires authentication. 
 
-The JWT must be sent on the `Authorization` header as follows: `Authorization: Bearer {jwt}`
+The JWT - `access_token` must be sent on the `Authorization` header as follows: `Authorization: Bearer {jwt}`
 
 ## Running it
 
