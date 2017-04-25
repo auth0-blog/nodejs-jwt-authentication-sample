@@ -5,11 +5,23 @@ var express = require('express'),
 
 var app = module.exports = express.Router();
 
+// Validate access_token
 var jwtCheck = jwt({
-  secret: config.secret
+  secret: config.secret,
+  audience: config.audience,
+  issuer: config.issuer
 });
 
-app.use('/api/protected', jwtCheck);
+// Check for scope
+function require_scope(scope) {
+  return function (req, res, next) {
+    var has_scopes = req.user.scope === scope;
+    if (!has_scopes) { res.send(401); }
+    next();
+  };
+}
+
+app.use('/api/protected', jwtCheck, require_scope('full_access'));
 
 app.get('/api/protected/random-quote', function(req, res) {
   res.status(200).send(quoter.getRandomOne());
