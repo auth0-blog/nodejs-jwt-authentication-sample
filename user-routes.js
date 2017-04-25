@@ -12,7 +12,7 @@ var users = [{
   password: 'gonto'
 }];
 
-function createToken(user) {
+function createIdToken(user) {
   return jwt.sign(_.omit(user, 'password'), config.secret, { expiresIn: 60*60*5 });
 }
 
@@ -83,7 +83,7 @@ app.post('/users', function(req, res) {
   users.push(profile);
 
   res.status(201).send({
-    id_token: createToken(profile),
+    id_token: createIdToken(profile),
     access_token: createAccessToken()
   });
 });
@@ -107,7 +107,7 @@ app.post('/sessions/create', function(req, res) {
   }
 
   res.status(201).send({
-    id_token: createToken(user),
+    id_token: createIdToken(user),
     access_token: createAccessToken()
   });
 });
