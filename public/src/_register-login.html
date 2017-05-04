@@ -1,0 +1,125 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/iron-localstorage/iron-localstorage.html">
+<link rel="import" href="../bower_components/iron-input/iron-input.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/app-route/app-location.html">
+<link rel="import" href="app-data.html">
+<link rel="import" href="log-out.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="register-login">
+  <template>
+    <style include="shared-styles">
+       :host {
+        display: block;
+
+        padding: 10px;
+      }
+    </style>
+
+    <iron-localstorage name="user-storage" value="{{storedUser}}"></iron-localstorage>
+    <app-location key="userData" route="{{route}}"></app-location>
+
+    <div class="card">
+      <div id="unauthenticated" hidden$="[[storedUser.loggedin]]">
+        <h1>Log in</h1>
+
+        <p><strong>Log in</strong> or <strong>sign up</strong> to access secret Chuck Norris quote</p>
+
+        <template is="dom-if" if="[[error]]">
+          <p class="alert-error"><strong>Error:</strong> [[error]]</p>
+        </template>
+
+        <paper-input-container>
+          <label>Username</label>
+          <input is="iron-input" id="username" type="text" bind-value="{{formData.username}}">
+        </paper-input-container>
+
+        <paper-input-container>
+          <label>Password</label>
+          <input is="iron-input" id="username" type="password" bind-value="{{formData.password}}">
+        </paper-input-container>
+
+        <div class="wrapper-btns">
+          <paper-button raised class="primary" on-tap="postLogin">Log in</paper-button>
+          <paper-button class="link" on-tap="postReqister">Sign Up</paper-button>
+        </div>
+
+        <iron-ajax id="registerLoginAjax" method="post"  
+          content-type="application/json" handle-as="text" 
+          on-response="handleUserResponse"
+          on-error="handleUserError"></iron-ajax>
+
+      </div>
+
+      <div id="authenticated" hidden$="[[!storedUser.loggedin]]">
+        <h2>Hello, [[storedUser.name]]</h2>
+        <p>You are currently logged in. You can acces <a href="/secret-quotes">Secret Quotes</a>!</p>
+        <log-out stored-user="{{storedUser}}"></log-out>
+      </div>
+
+    </div>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'register-login',
+      properties: {
+        formData: {
+          type: Object,
+          value: {}
+        },
+        storedUser: Object,
+        error: String
+      },
+
+      _setReqBody: function () {
+        this.$.registerLoginAjax.body = this.formData;
+      },
+      postLogin: function () {
+        this.$.registerLoginAjax.url = 'http://localhost:3001/sessions/create';
+        this._setReqBody();
+        this.$.registerLoginAjax.generateRequest();
+      },
+      postReqister: function () {
+        this.$.registerLoginAjax.url = 'http://localhost:3001/users';
+        this._setReqBody();
+        this.$.registerLoginAjax.generateRequest();
+      },
+      handleUserResponse: function (event) {
+        var response = JSON.parse(event.detail.response);
+
+        if (response.id_token) {
+          this.error = '';
+          this.storedUser = {
+            name: this.formData.username,
+            token: response.id_token,
+            loggedin: true
+          };
+
+          // redirect to Secret Quotes
+          this.set('route.path', '/secret-quotes');
+        }
+
+        // reset form data
+        this.formData = {};
+      },
+      handleUserError: function (event) {
+        this.error = event.detail.request.xhr.response;
+      }
+
+    });
+  </script>
+</dom-module>

@@ -1,0 +1,54 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="app-data.html">
+
+
+<dom-module id="log-out">
+  <template>
+    <style>
+       :host {
+        margin: 0;
+        padding: 0;
+      }
+      
+      paper-button {
+        background: #f44336;
+        color: #fff;
+        font-weight: bold;
+      }
+      
+      a {
+        color: #fff;
+        display: inline-block;
+        font-size: 13px;
+      }
+    </style>
+
+    <app-data key="userData" data="{{storedUser}}"></app-data>
+
+<template is="dom-if" if="{{!link}}">
+    <paper-button raised on-tap="logout">Log Out</paper-button>
+</template>
+
+<template is="dom-if" if="{{link}}">
+    <a on-tap="logout" href>Log Out</a>
+</template>
+
+  </template>
+  <script>
+    Polymer({
+      is: 'log-out',
+      properties: {
+        storedUser: Object,
+        link: {
+          type: Boolean,
+          value: false
+        }
+      },
+      logout: function () {
+        // remove user data
+        this.storedUser = null;
+      }
+    });
+  </script>
+</dom-module>

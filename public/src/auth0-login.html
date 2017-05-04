@@ -1,0 +1,103 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-localstorage/iron-localstorage.html">
+<link rel="import" href="app-data.html">
+<link rel="import" href="lockjs.html">
+
+
+<dom-module id="auth0-login">
+  <template>
+    <style>
+       :host {
+        color: #fff;
+        font-size: 13px;
+      }
+      
+      .greeting {
+        border-right: 1px solid rgba(255, 255, 255, .5);
+        display: inline-block;
+        padding-right: 6px;
+      }
+      
+      .greeting img {
+        border-radius: 100px;
+        display: inline-block;
+        height: 24px;
+        margin-right: 4px;
+        vertical-align: middle;
+        width: 24px;
+      }
+      
+      a {
+        color: #fff;
+      }
+    </style>
+
+    <iron-localstorage name="userData" value="{{storedUser}}" on-iron-localstorage-load="_setProfileImg"></iron-localstorage>
+    <app-data key="userData" data="{{storedUser}}"></app-data>
+
+    <a hidden$="[[storedUser.loggedin]]" on-tap="showLock" href>Log In</a>
+
+    <div hidden$="[[!storedUser.loggedin]]">
+      <span class="greeting"><img src="[[profileImgSrc]]">[[storedUser.profile.nickname]]</span>
+      <a on-tap="logOut" href>Log Out</a>
+    </div>
+  </template>
+
+  <script>
+    (function () {
+      Polymer({
+        is: 'auth0-login',
+        properties: {
+          clientId: String,
+          domain: String,
+          redirectUrl: String,
+          storedUser: Object,
+          auth0Lock: Object,
+          profileImgSrc: {
+            type: String,
+            value: ''
+          }
+        },
+        ready: function () {
+          var _self = this;
+          var _lockOptions = {
+            auth: {
+              redirectUrl: _self.redirectUrl,
+              responseType: 'token'
+            }
+          };
+
+          // create Auth0 Lock instance
+          _self.auth0Lock = new Auth0Lock(_self.clientId, _self.domain, _lockOptions);
+
+          _self.auth0Lock.on('authenticated', function (authResult) {
+            // save token
+            _self.set('storedUser', { token: authResult.idToken });
+
+            // get user's profile using token
+            _self.auth0Lock.getProfile(authResult.idToken, function (error, profile) {
+              if (error) {
+                console.error('Error getting profile:', error);
+                return;
+              }
+
+              _self.set('storedUser.loggedin', true);
+              _self.set('storedUser.profile', profile);
+              _self.set('profileImgSrc', profile.picture);
+            });
+          });
+        },
+        _setProfileImg: function () {
+          this.set('profileImgSrc', this.storedUser.profile.picture);
+        },
+        showLock: function () {
+          this.auth0Lock.show();
+        },
+        logOut: function () {
+          this.set('storedUser', null);
+          this.set('profileImgSrc', '');
+        }
+      });
+    }());
+  </script>
+</dom-module>
