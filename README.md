@@ -91,3 +91,9 @@ Auth0 helps you to:
 
 1. Go to [Auth0](https://auth0.com) and click Sign Up.
 2. Use Google, GitHub or Microsoft Account to login.
+
+## Use Postman
+
+Postman provides a powerful GUI platform to make your API development faster & easier, from building API requests through testing, documentation and sharing.
+
+[![Run NodeJS JWT Authentication in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/c57ddc507592c436662c)
