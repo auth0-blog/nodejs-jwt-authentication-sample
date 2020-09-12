@@ -19,11 +19,8 @@ app.use(bodyParser.json());
 app.use(cors());
 
 app.use(function(err, req, res, next) {
-  if (err.name === 'StatusError') {
-    res.send(err.status, err.message);
-  } else {
-    next(err);
-  }
+  if (err.name === 'StatusError') return res.send(err.status, err.message)
+  next(err);
 });
 
 if (process.env.NODE_ENV === 'development') {
